@@ -2,6 +2,7 @@ package com.example.surfaceview;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -11,7 +12,8 @@ public class DrawSurfaceView extends SurfaceView implements Runnable {
     SurfaceHolder holder;
     boolean threadRunning = true;
     boolean isRunning = true;
-    public DrawSurfaceView(Context context){
+
+    public DrawSurfaceView(Context context) {
 
         super(context);
         this.context = context;
@@ -22,25 +24,35 @@ public class DrawSurfaceView extends SurfaceView implements Runnable {
     @Override
     public void run() {
 
-        while (threadRunning) // כל המשחק ממשיך לפעול{
+        while (threadRunning) { // כל המשחק ממשיך לפעול
 
-            if(isRunning)// כשמישהו מנצח.מפסיד {
-                if(!holder.getSurface().isValid())
+            if (isRunning) { //כשמישהו מנצח.מפסיד
+                if (!holder.getSurface().isValid())
                     continue;
 
                 Canvas c = null;
                 try {
-                    c = this.getHolder();
+                    c = this.getHolder().lockCanvas();
+                    synchronized (this.getHolder()){
+                        c.drawRGB(100, 200, 135);
+
+                        //כאן יהיהה המשחק
+                    }
+
                 }
-                catch (Exception e){
+                catch (Exception e) {
+                    Log.d("WHY WHY", "run: " + e.getMessage());
 
                 }
                 finally {
-
+                    if(c != null){
+                        this.getHolder().unlockCanvasAndPost(c);
+                    }
                 }
             }
         }
-
-
     }
 }
+
+
+
