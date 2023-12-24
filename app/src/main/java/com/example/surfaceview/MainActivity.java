@@ -5,11 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.ActionBar;
 import android.os.Bundle;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
     DrawSurfaceView ds;
     Thread thread;
+    boolean userAskBack = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,5 +26,40 @@ public class MainActivity extends AppCompatActivity {
                 ViewGroup.LayoutParams.MATCH_PARENT);
         addContentView(ds, layoutParams);
 
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        userAskBack = true;
+        ds.threadRunning = false;
+        while (true){
+            try {
+                thread.join(); //הורס אותו
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+            break;
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(ds != null){
+            ds.resume();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(userAskBack){
+            Toast.makeText(this, "onPause", Toast.LENGTH_LONG).show();
+        }
+        else if(ds != null){
+            ds.pause();
+        }
     }
 }
