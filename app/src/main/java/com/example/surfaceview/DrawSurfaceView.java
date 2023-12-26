@@ -67,6 +67,9 @@ public class DrawSurfaceView extends SurfaceView implements Runnable {
                 } finally {
                     if (c != null) {
                         this.getHolder().unlockCanvasAndPost(c);
+                        if(coordx > this.getWidth()){
+                            destroy();
+                        }
                     }
                 }
             }

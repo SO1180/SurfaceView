@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ActionBar;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
@@ -55,8 +56,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        Log.d("data", "Pause");
         if(userAskBack){
-            Toast.makeText(this, "onPause", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "onPause", Toast.LENGTH_LONG).show(); // למשתמש על המסך
+            Log.d("data", "user ask back");
         }
         else if(ds != null){
             ds.pause();
